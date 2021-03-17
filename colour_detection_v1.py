@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
 
-video = cv2.VideoCapture(0)
+vid = cv2.VideoCapture(0)
 coords = []
 
 while True:
-    _, frame = video.read()
+    ret, frame = vid.read()
     frameHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # Red
@@ -46,6 +46,8 @@ while True:
     print('The coordinates of the mask from left to right and top to bottom and also the center are:')
     print(f'Top Left: {top_left}, Top Right: {top_right}, Bottom Left: {bottom_left}, Bottom Right: {bottom_right}, Center: {center}')
     
-    key = cv2.waitKey(1)
-    if key == 27:  # "s" key
+    if cv2.waitKey(1) and 0xFF == ord('q'):
         break
+
+vid.release()
+cv2.destroyAllWindows()
