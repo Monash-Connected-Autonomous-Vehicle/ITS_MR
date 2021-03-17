@@ -15,6 +15,18 @@ while True:
     red = cv2.bitwise_and(frame, frame, mask = red_mask)
     last_x_red, last_y_red = 0, 0 # Store the last x and y red positions
 
+    # Green
+    low_green = np.array([25, 52, 72])
+    high_green = np.array([102, 255, 255])
+    green_mask = cv2.inRange(frameHSV, low_green, high_green)
+    green = cv2.bitwise_and(frame, frame, mask = green_mask)
+
+    # Blue
+    low_blue = np.array([94, 80, 2])
+    high_blue = np.array([126, 255, 255])
+    blue_mask = cv2.inRange(frameHSV, low_blue, high_blue)
+    blue = cv2.bitwise_and(frame, frame, mask = mask)
+
     # Every colour except white
     low = np.array([0, 42, 0])
     high = np.array([179, 255, 255])
