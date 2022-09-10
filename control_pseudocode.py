@@ -97,7 +97,12 @@ class MotorServoDriver(msgs):
 
         # clip values
         speed = clip speed to valid [-1.0 or 0.0, +1.0] range
+         # -1: backwards
+        # 0: neutral
+        # 1: forward
         steering = clip steering to valid [-1.0, +1.0] range
+        # -1: left 
+        # +1: right
 
         #calculate the PWM values using the calibrated values 
         pwm_speed = map speed to the [MAX_REVERSE, MAX_FORWARD range]
