@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-#Import relevant libraries
-from fcntl import F_SEAL_SEAL
+#Import relevant librariesdaws
 import numpy as np
 import queue
 from threading import Thread
@@ -98,19 +97,19 @@ def getch():
         in_cursor = False
     elif char == 91 and in_escape: # ASCII value for '[' key
         in_cursor = True
-    elif char == 68 and in_cursor: # ASCII value for 'D' key
+    #elif char == 68 and in_cursor: # ASCII value for 'D' key
+        #key = LEFT_ARROW
+        #in_escape = False
+    #elif char == 67 and in_cursor: # ASCII value for 'C' key
+        #key = RIGHT_ARROW
+        #in_escape = False
+    elif char == 67 and in_cursor: # ASCII value for 'A' key
         key = LEFT_ARROW
         in_escape = False
-    elif char == 67 and in_cursor: # ASCII value for 'C' key
+    elif char == 68 and in_cursor: # ASCII value for 'B' key
         key = RIGHT_ARROW
         in_escape = False
-    elif char == 65 and in_cursor: # ASCII value for 'A' key
-        key = UP_ARROW
-        in_escape = False
-    elif char == 66 and in_cursor: # ASCII value for 'B' key
-        key = DOWN_ARROW
-        in_escape = False
-    elif char == 72 and in_cursor: # ASCII value for 'H' key
+    elif char == 104 and in_cursor: # ASCII value for 'H' key
         key = HOME
         in_escape = False
     elif char == 113 or char == 81: # ASCII value for 'q and Q' key
@@ -141,7 +140,7 @@ in_cursor = False
 pwm = MID_SERVO_PWM
 pi.set_servo_pulsewidth(SERVO_GPIO_PIN, pwm)
 
-while True:
+while True and range(650, 1650):
     time.sleep(0.01)
     char = getch()
 
@@ -151,17 +150,17 @@ while True:
 
     if char == HOME:
         pulsewidth = MID_SERVO_PWM # Stop
-    elif char == UP_ARROW:
-        pulsewidth = MIN_SERVO_PWM # Fastest Clockwise
-    elif char == DOWN_ARROW:
-        pulsewidth = MAX_SERVO_PWM # Fastest Clockwise
+    #elif char == LEFT_ARROW:
+        #pulsewidth = MIN_SERVO_PWM # Fastest Clockwise
+    #elif char == RIGHT_ARROW:
+        #pulsewidth = MAX_SERVO_PWM # Fastest Clockwise
     elif char == LEFT_ARROW:
-        pulsewidth = pulsewidth - 5 # Shorten pulse
-        if pulsewidth < MAX_SERVO_PWM:
-            pulsewidth = MAX_SERVO_PWM
+        pulsewidth = pulsewidth - 100 # Shorten pulse
+    if pulsewidth < MIN_SERVO_PWM:
+        pulsewidth = MAX_SERVO_PWM
     elif char == RIGHT_ARROW:
-        pulsewidth = pulsewidth + 5 # Lengthen pulse
-        if pulsewidth > MIN_SERVO_PWM:
+        pulsewidth = pulsewidth + 100 # Lengthen pulse
+    if pulsewidth > MAX_SERVO_PWM:
             pulsewidth = MIN_SERVO_PWM
     if pulsewidth != pwm:
         pwm = pulsewidth

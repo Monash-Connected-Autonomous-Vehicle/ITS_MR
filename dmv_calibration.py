@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# RUN "sudo pigpiod" IN TERMINAL BEFORE RUNNING CODE!!!!
 import pigpio # Import PIGPIO library for hardware PWM values
 from time import sleep # Import sleep function
 
@@ -12,7 +13,7 @@ pi.set_servo_pulsewidth(SERVO_GPIO, 1650) # A PWM of 1650us will full lock to th
 sleep(1) # Sleep for 1 second
 pi.set_servo_pulsewidth(SERVO_GPIO, 1150) # A PWM of 1150us will bring steering to neutral position
 sleep(1) # Sleep for 1 second
-pi.set_servo_pulsewidth(SERVO_GPIO, 650) # A PWM of 650us will full lock to the left
+pi.set_servo_pulsewidth(SERVO_GPIO, 650) # A PWM of 650us will full lock to the right
 sleep(1) # Sleep for 1 second
 pi.set_servo_pulsewidth(SERVO_GPIO, 1150) # Return to neutral position
 sleep(1) # Sleep for 1 second
