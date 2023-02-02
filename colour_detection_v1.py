@@ -43,8 +43,22 @@ def main():
 
     image_zed = sl.Mat(image_size.width, image_size.height, sl.MAT_TYPE.U8_C4)
     image_ocv = image_zed.get_data()
+    
     cv2.imshow("Image", image_ocv)
-    cv2.waitKey(10)
+    b = image_ocv[:, :, :1]
+    g = image_ocv[:, :, 1:2]
+    r = image_ocv[:, :, 2:]
+
+    b_mean = np.mean(b)
+    g_mean = np.mean(g)
+    r_mean = np.mean(r)
+
+    if (b_mean > g_mean and b_mean > r_mean):
+        print("Blue")
+    if (g_mean > r_mean and g_mean > b_mean):
+        print("Green")
+    else:
+        print("Red")
 
 cv2.destroyAllWindows
 zed.close() 
