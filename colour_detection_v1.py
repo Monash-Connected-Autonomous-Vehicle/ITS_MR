@@ -1,67 +1,28 @@
-import sys
-import numpy as np
-import pyzed.sl as sl
 import cv2
+import numpy as np
 
-def save_sbs_image(zed, filename) :
+video = cv2.VideoCapture(0)
 
-    image_sl_left = sl.Mat()
-    zed.retrieve_image(image_sl_left, sl.VIEW.LEFT)
-    image_cv_left = image_sl_left.get_data()
+while True:
+    _, frame = video.read()
+    frameHSV = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    image_sl_right = sl.Mat()
-    zed.retrieve_image(image_sl_right, sl.VIEW.RIGHT)
-    image_cv_right = image_sl_right.get_data()
+    # Red
+    low_red = np.array([161, 155, 84])
+    high_red = np.array([179, 255, 255])
+    red_mask = cv2.inRange(frameHSV, low_red, high_red)
+    red = cv2.bitwise_and(frame, frame, mask = red_mask)
 
-    sbs_image = np.concatenate((image_cv_left, image_cv_right), axis=1)
+    # Every colour except white
+    low = np.array([0, 42, 0])
+    high = np.array([179, 255, 255])
+    mask = cv2.inRange(frameHSV, low, high)
+    result = cv2.bitwise_and(frame, frame, mask = mask)
 
-    cv2.imwrite(filename, sbs_image)
-
-def main():
-
-    zed = sl.Camera()
-
-    input_type = sl.InputType()
-    if len(sys.argv) >= 2:
-        input_type.set_from_svo_file(sys.argv[1])
-    init = sl.InitParameters(input_t=input_type)
-    init.camera_resolution = sl.RESOLUTION.HD1080
-    init.coordinate_units = sl.UNIT.MILLIMETER
-
-    err = zed.open(init)
-    if err != sl.ERROR_CODE.SUCCESS :
-        print(repr(err))
-        zed.close()
-        exit(1)
-
-    runtime = sl.RuntimeParameters()
-    runtime.sensing_mode = sl.SENSING_MODE.STANDARD
-
-    image_size = zed.get_camera_information().camera_resolution
-    image_size.width = image_size.width /2
-    image_size.height = image_size.height /2
-
-    image_zed = sl.Mat(image_size.width, image_size.height, sl.MAT_TYPE.U8_C4)
-    image_ocv = image_zed.get_data()
+    cv2.imshow("Frame", frame)
+    cv2.imshow("Red mask", red)
+    cv2.imshow("Result", result)
     
-    cv2.imshow("Image", image_ocv)
-    b = image_ocv[:, :, :1]
-    g = image_ocv[:, :, 1:2]
-    r = image_ocv[:, :, 2:]
-
-    b_mean = np.mean(b)
-    g_mean = np.mean(g)
-    r_mean = np.mean(r)
-
-    if (b_mean > g_mean and b_mean > r_mean):
-        print("Blue")
-    if (g_mean > r_mean and g_mean > b_mean):
-        print("Green")
-    else:
-        print("Red")
-
-cv2.destroyAllWindows
-zed.close() 
-
-if __name__ == "__main__":
-    main()
+    key = cv2.waitKey(1)
+    if key == 27:  # "s" key
+        break
